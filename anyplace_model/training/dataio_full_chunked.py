@@ -924,7 +924,7 @@ class FullRelationPointcloudPolicyDataset(Dataset):
                 x=[xmin, xmax],
                 y=[ymin, ymax],
                 z=[zmin, zmax])
-        elif self.gpp_crop and ("tuberack" in parent_name or "vialplate" in parent_name or "rack" in parent_name):
+        elif self.gpp_crop:
             start_child_mean = np.mean(child_final_pcd_orig, axis=0)
             # calculate the length, width and height of the final child point cloud
             min_vals = np.min(child_final_pcd_orig, axis=0)
@@ -938,29 +938,6 @@ class FullRelationPointcloudPolicyDataset(Dataset):
             xmin, xmax = start_child_mean[0] - (child_length_x/2) - bbox_clearance, start_child_mean[0] + (child_length_x/2) + bbox_clearance
             ymin, ymax = start_child_mean[1] - (child_length_y/2) - bbox_clearance, start_child_mean[1] + (child_length_y/2) + bbox_clearance
             zmin, zmax = start_child_mean[2] - child_length_z - 0.08, start_child_mean[2] + child_length_z
-
-            cropped_parent_start_pcd = util.crop_pcd(
-                parent_start_pcd, 
-                x=[xmin, xmax],
-                y=[ymin, ymax],
-                z=[zmin, zmax])
-        elif self.gpp_crop and ("bookshelf" in parent_name or "cabinet" in parent_name):
-            start_child_mean = np.mean(child_final_pcd_orig, axis=0)
-            # calculate the length, width and height of the final child point cloud
-            min_vals = np.min(child_final_pcd_orig, axis=0)
-            max_vals = np.max(child_final_pcd_orig, axis=0)
-            child_length_x = max_vals[0] - min_vals[0]  # X-axis range
-            child_length_y = max_vals[1] - min_vals[1]  # Y-axis range
-            child_length_z = max_vals[2] - min_vals[2]  
-
-            # randomly sample a bounding box clearance between 0.01 and 0.03
-            bbox_clearance = np.random.uniform(0.015, 0.02)
-            xmin, xmax = start_child_mean[0] - (child_length_x/2) - bbox_clearance, start_child_mean[0] + (child_length_x/2) + bbox_clearance
-            ymin, ymax = start_child_mean[1] - (child_length_y/2) - bbox_clearance, start_child_mean[1] + (child_length_y/2) + bbox_clearance
-            if "cabinet" in parent_name:
-                min, zmax = start_child_mean[2] - (child_length_z/2) - bbox_clearance - 0.02, start_child_mean[2] + (child_length_z/2) + bbox_clearance
-            else:
-                zmin, zmax = start_child_mean[2] - (child_length_z/2) - bbox_clearance, start_child_mean[2] + (child_length_z/2) + bbox_clearance
 
             cropped_parent_start_pcd = util.crop_pcd(
                 parent_start_pcd, 

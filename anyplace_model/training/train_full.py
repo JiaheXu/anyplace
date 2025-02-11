@@ -35,7 +35,7 @@ def train(
         refine_pose_model: nn.Module, 
         pr_optimizer: Optimizer, 
         train_dataloader: DataLoader, test_dataloader: DataLoader, 
-        pr_loss_fn: Callable, sc_loss_fn: Callable,
+        pr_loss_fn: Callable,
         dev: torch.device, 
         logger: SummaryWriter, 
         logdir: str, 
@@ -246,12 +246,6 @@ def main(args: config_util.AttrDict):
             l1=args.loss.tf_chamfer.l1,
             trans_offset=args.loss.tf_chamfer.trans_offset)
         pr_loss_fn = tfc_mqa_wrapper.tf_chamfer
-    elif pr_loss_type == 'tf_chamfer_w_kldiv':
-        tfc_mqa_wrapper = losses.TransformChamferWrapper(
-            l1=args.loss.tf_chamfer.l1,
-            trans_offset=args.loss.tf_chamfer.trans_offset,
-            kl_div=True)
-        pr_loss_fn = tfc_mqa_wrapper.tf_chamfer_w_kldiv
     else:
         raise ValueError(f'Unrecognized: {pr_loss_fn}')
 
@@ -277,33 +271,8 @@ def main(args: config_util.AttrDict):
         
     pr_optimizer = pr_opt_cls(pr_model_params, **pr_opt_kwargs)
 
-    # loss
-    sc_loss_type = args.loss.success.type
-    assert sc_loss_type in args.loss.success.valid_losses, f'Loss type: {sc_loss_type} not in {args.loss.success.valid_losses}'
-    if sc_loss_type == 'bce_wo_logits':
-        sc_loss_fn = losses.success_bce
-    elif sc_loss_type == 'bce_w_logits':
-        double_batch = args.loss.bce_w_logits.double_batch_size
-        batch_scalar = 2 if double_batch else 1  # in some experiments, we double the batch size for the success model
-        bce_logits_wrapper = losses.BCEWithLogitsWrapper(pos_weight=args.loss.bce_w_logits.pos_weight, bs=args.experiment.batch_size*batch_scalar)
-        sc_loss_fn = bce_logits_wrapper.success_bce_w_logits
-    else:
-        raise ValueError(f'Unrecognized: {sc_loss_type}')
-
-    # optimizer
-    sc_opt_type = args.optimizer.success.type
-    assert sc_opt_type in args.optimizer.success.valid_opts, f'Opt type: {sc_opt_type} not in {args.optimizer.success.valid_opt}'
-
-    if sc_opt_type == 'Adam':
-        sc_opt_cls = torch.optim.Adam 
-    elif sc_opt_type == 'AdamW':
-        sc_opt_cls = torch.optim.AdamW 
-    else:
-        raise ValueError(f'Unrecognized: {sc_opt_type}')
-
     ##############################################
     # Load checkpoints if resuming
-
     if args.experiment.resume and args.resume_ap:
         # find the latest iteration
         ckpts = [int(val.split('model_')[1].replace('.pth', '')) for val in os.listdir(logdir) if (val.endswith('.pth') and 'latest' not in val)]
@@ -325,27 +294,13 @@ def main(args: config_util.AttrDict):
         device = torch.device('cuda')
     else:
         raise ValueError('Cuda not available')
-
-    ##############################################
-    # Perform other checks to ensure experiment config is valid
-    train_exp_args = config_util.copy_attr_dict(args.experiment.train)
-    if train_exp_args.refine_pose_from_coarse_pred:
-        assert train_exp_args.train_coarse_aff and train_exp_args.train_refine_pose, 'Must be training both coarse and refine to use predictions as refinement input'
     
-    assert not (train_exp_args.success_from_coarse_pred and train_exp_args.success_from_refine_pred), 'Cannot predict success from both refine pred and coarse pred. Please only set one of these to True'
-
-    if train_exp_args.success_from_coarse_pred: 
-        assert train_exp_args.train_coarse_aff and train_exp_args.train_success, 'Must be training both coarse and success to use predictions as success input'
-
-    if train_exp_args.success_from_refine_pred: 
-        assert train_exp_args.train_refine_pose and train_exp_args.train_success, 'Must be training both refine and success to use predictions as success input'
-
     train(
         mc_vis, 
         pr_model, 
         pr_optimizer,
         train_dataloader, val_dataloader, 
-        pr_loss_fn, sc_loss_fn,
+        pr_loss_fn,
         device, 
         logger, 
         logdir, 

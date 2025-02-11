@@ -18,3 +18,4 @@ pandas
 configargparse
 ipython
 tqdm
+open3d

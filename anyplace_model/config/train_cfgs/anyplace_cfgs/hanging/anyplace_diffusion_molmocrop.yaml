@@ -2,8 +2,8 @@ inherit_from: base.yaml
 experiment:
     num_train_workers: 24 #12
     batch_size: 48 #16
-    experiment_name: rpdiff_diffusion_molmocrop_inserting
-    run_name: rpdiff_diffusion_molmocrop_inserting
+    experiment_name: anyplace_diffusion_molmocrop_hanging
+    run_name: anyplace_diffusion_molmocrop_hanging
     meshcat_on: False
     resume: False
     num_iterations: 500000
@@ -17,8 +17,8 @@ experiment:
         out_log_success: True
 
 data:
-    data_root: task_gpp_inserting
-    dataset_path: inserting/task_name_inserting_chunked
+    data_root: task_gpp_hanging
+    dataset_path: hanging/task_name_hanging_chunked
     parent_mesh_dir: 
     child_mesh_dir: 
     load_full_pcd: False
@@ -35,9 +35,9 @@ data:
     refine_pose:
         diffusion_steps: true
         n_diffusion_steps: 5
-        parent_crop: True
-        parent_crop_same_n: True
-        vary_crop_size_diffusion: true
+        parent_crop: False
+        parent_crop_same_n: False
+        vary_crop_size_diffusion: False
         interp_diffusion_traj: true
         precise_diff_prob: true
         parent_shape_pcd_n: 400
