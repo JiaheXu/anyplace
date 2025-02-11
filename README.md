@@ -72,7 +72,7 @@ python train_full.py -c anyplace_cfgs/multitask/anyplace_diffusion_molmocrop_mt.
 ### Evaluation
 For evaluation, first obtain the predicted placement poses by running AnyPlace models, then execute the predicted placements using our IsaacLab Pick and Place pipeline.
 
-#### Placement Pose Prediction
+#### -> Placement Pose Prediction
 1. Setup the meshcat visualizer to visualize the object pointclouds at each diffusion step
 ```
 meshcat-server   # use port 7000 by default
@@ -88,10 +88,10 @@ python evaluate_official.py -c anyplace_eval/vial_inserting/anyplace_diffusion_m
 cd eval/
 python visualize_placement.py
 ```
-#### IsaacLab Pick and Place Evaluation
+#### -> IsaacLab Pick and Place Evaluation
 Follow instruction [here](anyplace_isaaclab_pick_place/README.md) to run the AnyPlace IsaacLab Pick and Place evaluation pipeline.
 
-#### Checkpoints
+#### -> Checkpoints
 Model checkpoints can also be downloaded on [Huggingface](https://huggingface.co/datasets/yuchiallanzhao/anyplace).
 
 ### Inference with AnyPlace high-level pose location prediction
