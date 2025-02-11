@@ -12,8 +12,8 @@ experiment:
     use_floating_hand_execution: False
     eval:
         pose_refine_model_name: anyplace_diffusion_molmocrop_multitask_vial_inserting_inference
-        data_path: /local-scratch/gpp_data/official_gpp_data/real_eval/vial_inserting/scene_1/gpp_1
-        ckpt_path: /local-scratch/gpp_data/official_gpp_weight/rpdiff/rpdiff_diffusion_molmocrop_vial_inserting/model_latest.pth 
+        data_path: $PATH_TO_EVAL_DATASET/DATA_PATH                                 # UPDATE THIS
+        ckpt_path: $PATH_TO_CHECKPOINT                                             # UPDATE THIS
         base_obj_file_name: base_obj_pcd
         target_obj_file_name: target_obj_pcd
         use_molmo: True  

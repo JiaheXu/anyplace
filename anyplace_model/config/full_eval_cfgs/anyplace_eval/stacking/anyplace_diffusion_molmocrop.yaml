@@ -12,9 +12,9 @@ experiment:
     use_floating_hand_execution: False
     eval:
         pose_refine_model_name: anyplace_diffusion_molmocrop_stacking_eval
-        obj_path: /local-scratch/gpp_data/official_gpp_data/eval_dataset/obj_model
-        ckpt_path: /local-scratch/gpp_weight/rpdiff_diffusion_molmocrop_stacking/model_latest.pth 
-        eval_dataset_path: /local-scratch/gpp_data/official_gpp_data/eval_dataset/task_gpp_stacking/stacking
+        obj_path: $PATH_TO_EVAL_DATASET/eval_dataset/obj_model                                   # UPDATE THIS
+        ckpt_path: $PATH_TO_CHECKPOINT                                                           # UPDATE THIS
+        eval_dataset_path: $PATH_TO_EVAL_DATASET/eval_dataset/task_gpp_stacking/stacking
         use_molmo: True  
         remove_redundant_pose: False
         model_type: anyplace_diffusion_molmocrop

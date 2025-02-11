@@ -188,10 +188,6 @@ def main(args: config_util.AttrDict) -> None:
         use_molmo_crop = False   # this is to prevent cropping the base object like pegs in insertion eval
         # check if the word "rack, vialplate, tuberack" is in the base object name
         if args.experiment.eval.use_molmo and ('rack' in base_obj_name or 'vialplate' in base_obj_name or 'tuberack' in base_obj_name) :
-            # read ground truth hole location of base object
-            # base_obj_info_path = f'{obj_directory}/{base_obj_class}/{base_obj_name}_data.npy' 
-            # hole_locations = np.load(base_obj_info_path)[:, 1:]
-
             # read predicted hole location of base objecfrom Molmo
             use_molmo_crop = True
             base_obj_info_path = f'{obj_directory}/{base_obj_class}/{base_obj_name}_place_info/{base_obj_name}_points_3d.npy' 

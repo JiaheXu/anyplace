@@ -1,6 +1,6 @@
 inherit_from: base.yaml
 experiment:
-    experiment_name: anyplace_diffusion_molmocrop_inserting_eval 
+    experiment_name: anyplace_diffusion_molmocrop_hanging_eval 
     num_iterations: 50
     meshcat_on: False
     pybullet_viz: False
@@ -11,10 +11,10 @@ experiment:
     show_floating_hand_meshcat: False
     use_floating_hand_execution: False
     eval:
-        pose_refine_model_name: anyplace_diffusion_molmocrop_inserting_eval
+        pose_refine_model_name: anyplace_diffusion_molmocrop_hanging_eval
         obj_path: $PATH_TO_EVAL_DATASET/eval_dataset/obj_model                                   # UPDATE THIS
         ckpt_path: $PATH_TO_CHECKPOINT                                                           # UPDATE THIS
-        eval_dataset_path: $PATH_TO_EVAL_DATASET/eval_dataset/task_gpp_inserting/inserting
+        eval_dataset_path: $PATH_TO_EVAL_DATASET/eval_dataset/task_gpp_hanging/hanging
         use_molmo: True  
         remove_redundant_pose: False
         model_type: anyplace_diffusion_molmocrop

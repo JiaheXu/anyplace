@@ -57,7 +57,7 @@ source anyplace_env.sh
 
 ### Training
 1. Download the AnyPlace synthetic dataset on [Huggingface](https://huggingface.co/datasets/yuchiallanzhao/anyplace).
-2. Configure [wandb](https://docs.wandb.ai/quickstart/) on your machine
+2. Configure [wandb](https://docs.wandb.ai/quickstart/) on your machine.
 3. Run the following commands to launch the single-task and multi-task training:
 ```
 # for single-task training
@@ -77,12 +77,13 @@ For evaluation, first obtain the predicted placement poses by running AnyPlace m
 ```
 meshcat-server   # use port 7000 by default
 ```
-2. Run the AnyPlace model by:
+2. Download the AnyPlace evaluation dataset on [Huggingface](https://huggingface.co/datasets/yuchiallanzhao/anyplace), which contains object USD files, RGBD images and object pointclouds.
+3. Update file path in config files and then run the AnyPlace model by:
 ```
 cd eval/
 python evaluate_official.py -c anyplace_eval/vial_inserting/anyplace_diffusion_molmocrop_multitask.yaml # config files for different tasks can be found under config/full_eval_cfgs/anyplace_eval
 ```
-3. To visualize pointclouds at their final predicted placement poses, first update the data folder path in the ['visualize_placement.py'](anyplace_model/eval/visualize_placement.py) and then run:
+4. To visualize pointclouds at their final predicted placement poses, first update the data folder path in the ['visualize_placement.py'](anyplace_model/eval/visualize_placement.py) and then run:
 ```
 cd eval/
 python visualize_placement.py
@@ -90,6 +91,8 @@ python visualize_placement.py
 #### IsaacLab Pick and Place Evaluation
 Follow instruction [here](anyplace_isaaclab_pick_place/README.md) to run the AnyPlace IsaacLab Pick and Place evaluation pipeline.
 
+#### Checkpoints
+Model checkpoints can also be downloaded on [Huggingface](https://huggingface.co/datasets/yuchiallanzhao/anyplace).
 
 ### Inference with AnyPlace high-level pose location prediction
 coming soon......
