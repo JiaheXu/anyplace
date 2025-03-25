@@ -43,4 +43,4 @@ cd graspnetAPI
 pip install .
 ```
 
-Finally, download either [checkpoint-rs.tar](https://drive.google.com/file/d/1hd0G8LN6tRpi4742XOTEisbTXNZ-1jmk/view?usp=sharing) or [checkpoint-kn.tar](https://drive.google.com/file/d/1vK-d0yxwyJwXHYWOtH1bDMoe--uZ2oLX/view?usp=sharing) to the `models/anygrasp` folder.
+Finally, download either [checkpoint-rs.tar](https://drive.google.com/file/d/1hd0G8LN6tRpi4742XOTEisbTXNZ-1jmk/view?usp=sharing) or [checkpoint-kn.tar](https://drive.google.com/file/d/1vK-d0yxwyJwXHYWOtH1bDMoe--uZ2oLX/view?usp=sharing) to the `grasp_detection` folder.

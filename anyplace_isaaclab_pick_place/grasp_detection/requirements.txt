@@ -1,4 +1,4 @@
-# torch==1.10.1
+torch==1.10.1
 tensorboard==2.3
 numpy==1.23.5
 scipy
