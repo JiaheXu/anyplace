@@ -22,6 +22,7 @@ def train_iter_refine_pose(
             args: AttrDict,
             it: int, current_epoch: float,
             logger: SummaryWriter,
+            training: bool = True,
             mc_vis: Visualizer=None):
 
     mc_iter_name = 'scene/train_iter_pose'
@@ -111,46 +112,55 @@ def train_iter_refine_pose(
 
     #######################################################################
     # Gradient step, log, and return
-    if args.optimizer.refine_pose.use_schedule:
-        sched_args = args.optimizer.schedule
-        if args.optimizer.refine_pose.get('schedule') is not None:
-            if args.optimizer.refine_pose.schedule is not None:
-                sched_args = args.optimizer.refine_pose.schedule
+    if(training):
+        if args.optimizer.refine_pose.use_schedule:
+            sched_args = args.optimizer.schedule
+            if args.optimizer.refine_pose.get('schedule') is not None:
+                if args.optimizer.refine_pose.schedule is not None:
+                    sched_args = args.optimizer.refine_pose.schedule
 
-        opt_type = args.optimizer.refine_pose.type
-        sched_args.lr = args.optimizer[opt_type].lr
-        sched_args.epochs = args.experiment.num_iterations * bs / args.experiment.dataset_length
+            opt_type = args.optimizer.refine_pose.type
+            sched_args.lr = args.optimizer[opt_type].lr
+            sched_args.epochs = args.experiment.num_iterations * bs / args.experiment.dataset_length
 
-        adj_lr = adjust_learning_rate(pr_optimizer, current_epoch, sched_args) 
-        lr = pr_optimizer.param_groups[0]['lr'] 
+            adj_lr = adjust_learning_rate(pr_optimizer, current_epoch, sched_args) 
+            lr = pr_optimizer.param_groups[0]['lr'] 
 
-    pr_optimizer.zero_grad()
-    loss.backward()
-    grad_norm = get_grad_norm(pose_refine_model) 
-    pr_optimizer.step()
+        pr_optimizer.zero_grad()
+        loss.backward()
+        grad_norm = get_grad_norm(pose_refine_model) 
+        pr_optimizer.step()
 
-    if it % args.experiment.log_interval == 0 and args.experiment.train.out_log_refine_pose:
-        string = f'[Pose Refinement] Iteration: {it} (Epoch: {int(current_epoch)}) '
+        if it % args.experiment.log_interval == 0 and args.experiment.train.out_log_refine_pose:
+            string = f'[Pose Refinement] Iteration: {it} (Epoch: {int(current_epoch)}) '
+            for loss_name, loss_val in loss_dict.items():
+                string += f'{loss_name}: {loss_val.mean().item():.6f} '
+                logger.add_scalar(loss_name, loss_val.mean().item(), it)
+                end_time = time.time()
+                total_duration = end_time - start_time
+
+            string += f' Grad norm : {grad_norm:.4f}'
+            if args.optimizer.refine_pose.use_schedule:
+                string += f' LR : {lr:.7f}'
+
+            string += f' Duration: {total_duration:.4f}'
+            print(string)
+            parent_final_pcd_visual = pose_refine_gt['parent_final_pcd'][db_idx].detach().cpu().numpy()
+            child_pcd_final_pred_visual = pose_refine_model_output['child_pcd_final_pred'][db_idx].detach().cpu().numpy()
+            wandb.log(
+                {
+                    "point_scene": wandb.Object3D(np.concatenate([parent_final_pcd_visual, child_pcd_final_pred_visual], axis=0))
+                }
+            )
+    else:
+        string = f'[Eval result] Iteration: {it} (Epoch: {int(current_epoch)}) '
         for loss_name, loss_val in loss_dict.items():
             string += f'{loss_name}: {loss_val.mean().item():.6f} '
             logger.add_scalar(loss_name, loss_val.mean().item(), it)
             end_time = time.time()
             total_duration = end_time - start_time
-
-        string += f' Grad norm : {grad_norm:.4f}'
-        if args.optimizer.refine_pose.use_schedule:
-            string += f' LR : {lr:.7f}'
-
         string += f' Duration: {total_duration:.4f}'
         print(string)
-        parent_final_pcd_visual = pose_refine_gt['parent_final_pcd'][db_idx].detach().cpu().numpy()
-        child_pcd_final_pred_visual = pose_refine_model_output['child_pcd_final_pred'][db_idx].detach().cpu().numpy()
-        wandb.log(
-            {
-                "point_scene": wandb.Object3D(np.concatenate([parent_final_pcd_visual, child_pcd_final_pred_visual], axis=0))
-            }
-        )
-
     out_dict = {}
     out_dict['loss'] = loss_dict
     out_dict['model_output'] = pose_refine_model_output

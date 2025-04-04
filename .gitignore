@@ -1,0 +1,7 @@
+*pycache*
+*anyplace.egg-info/
+build
+*.so
+*.cpp
+*wandb*
+*weights*

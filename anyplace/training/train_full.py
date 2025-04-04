@@ -116,6 +116,36 @@ def train(
                 torch.save(ckpt, model_path)
                 torch.save(ckpt, model_path_latest)
 
+            if it % args.experiment.val_interval == 0 and it > 0:
+                for eval_sample in test_dataloader:
+                    coarse_aff_sample, refine_pose_sample = eval_sample
+                    coarse_aff_mi, coarse_aff_gt = coarse_aff_sample
+                    refine_pose_mi, refine_pose_gt = refine_pose_sample
+                    refine_pose_out = None
+                    loss_dict = {}
+
+                    if args.experiment.train.train_refine_pose and (len(refine_pose_mi) > 0):
+                        # prepare input and gt
+                        refine_pose_mi = dict_to_gpu(refine_pose_mi)
+                        refine_pose_gt = dict_to_gpu(refine_pose_gt)
+                        refine_pose_out = train_iter_refine_pose(
+                            refine_pose_mi,
+                            refine_pose_gt,
+                            refine_pose_model,
+                            pr_optimizer,
+                            pr_loss_fn,
+                            args,
+                            it, current_epoch,
+                            logger,
+                            training = False,
+                            mc_vis=mc_vis)
+                        
+                        # process output for logging
+                        for k, v in refine_pose_out['loss'].items():
+                            loss_dict[k] = v
+                            wandb.log({"eval_" + k: v})
+                    break
+
 
 def main(args: config_util.AttrDict):
     random.seed(args.seed)

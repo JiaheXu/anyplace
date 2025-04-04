@@ -1,7 +1,7 @@
 inherit_from: base.yaml
 experiment:
-    num_train_workers: 12 #12
-    batch_size: 16 #16
+    num_train_workers: 24 #12
+    batch_size: 48 #16
     experiment_name: anyplace_diffusion_molmocrop_hanging
     run_name: anyplace_diffusion_molmocrop_hanging
     meshcat_on: False

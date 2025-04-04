@@ -55,7 +55,9 @@ class FullRelationPointcloudPolicyDataset(Dataset):
         else:
             self.files = [osp.join(self.data_path, fn) for fn in os.listdir(self.data_path) if fn.endswith('.npz')]
             self.img_files = [osp.join(self.data_path, fn) for fn in os.listdir(self.data_path) if fn.endswith('.png')]
-
+        
+        # print("split: ", split)
+        # print("self.phase: ", self.phase)
         if split == 'train' and self.phase != 'val':
             files = [fn for fn in self.files if fn.split('/')[-1] in train_split]
         elif split == 'val' or self.phase == 'val':
@@ -84,6 +86,8 @@ class FullRelationPointcloudPolicyDataset(Dataset):
                 for i, data_chunk in enumerate(self.data_chunks):
                     print(f'Processed {i+1} data chunks...')
                     for f in data_chunk.files:
+                        # print("files: ", data_chunk.files)
+                        # print("data: ", data_chunk['20'])
                         data = data_chunk[f].item()
                         self.data.append(data)
             else:
