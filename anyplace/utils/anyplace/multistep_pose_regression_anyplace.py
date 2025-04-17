@@ -102,9 +102,9 @@ def multistep_regression_scene(
         # 'post_rot_multi_refine',
         # 'refine_iters',
         # 'viz_attn',
-        'refine_recrop',    # turn on to see diffusion
+        # 'refine_recrop',    # turn on to see diffusion
         # 'final_box',
-        'final_pcd',        # turn on to see diffusion
+        # 'final_pcd',        # turn on to see diffusion
     ]
     
     ###############################################################
@@ -131,7 +131,7 @@ def multistep_regression_scene(
     
     # prep the region we will use for checking if final translations are valid (i.e., close enough to the parent)
     parent_pcd_obb = trimesh.PointCloud(parent_pcd).bounding_box_oriented
-    util.meshcat_trimesh_show(mc_vis, f'scene/voxel_grid_world/parent_pcd_obb', parent_pcd_obb.to_mesh(), opacity=0.3)
+    # util.meshcat_trimesh_show(mc_vis, f'scene/voxel_grid_world/parent_pcd_obb', parent_pcd_obb.to_mesh(), opacity=0.3)
 
     k_val = init_k_val
     if init_parent_mean:
@@ -144,7 +144,7 @@ def multistep_regression_scene(
 
         for i, pt in enumerate(world_pts):
             box = trimesh.creation.box([sz_base]*3).apply_translation(pt)
-            util.meshcat_trimesh_show(mc_vis, f'scene/rnd_voxel_grid_world/{i}', box, opacity=0.3)
+            # util.meshcat_trimesh_show(mc_vis, f'scene/rnd_voxel_grid_world/{i}', box, opacity=0.3)
 
     ###############################################################
     # Setup parent point cloud cropping
@@ -708,7 +708,7 @@ def multistep_regression_scene(
             color = (color_list[ii][:-1] * 255).astype(np.uint8).tolist()
             box = trimesh.PointCloud(child_pcd_final_topk[ii].detach().cpu().numpy().squeeze()).bounding_box_oriented.to_mesh()
             # util.meshcat_trimesh_show(mc_vis, f'scene/infer/success_topk_box/child_pts_box_{ii}', box, color)
-            util.meshcat_trimesh_show(mc_vis, f'scene/infer/success_topk_box/{ii_bucket}/child_pts_box_{ii}', box, color)
+            # util.meshcat_trimesh_show(mc_vis, f'scene/infer/success_topk_box/{ii_bucket}/child_pts_box_{ii}', box, color)
         
         # save the translation component
         tmat = np.eye(4); tmat[:-1, -1] = out_trans_full[ii].detach().cpu().numpy().squeeze()

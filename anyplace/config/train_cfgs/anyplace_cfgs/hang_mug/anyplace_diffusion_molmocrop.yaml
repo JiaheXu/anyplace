@@ -25,8 +25,8 @@ data:
     parent_crop: False
     gpp_crop: True
     shape_pcd_n: 2048
-    parent_shape_pcd_n: 400
-    child_shape_pcd_n: 200
+    parent_shape_pcd_n: 512
+    child_shape_pcd_n: 512
     pose_perturb:
         use_small_rot_scale: False
         use_small_trans_scale: False
@@ -40,10 +40,10 @@ data:
         vary_crop_size_diffusion: False
         interp_diffusion_traj: true
         precise_diff_prob: true
-        parent_shape_pcd_n: 400
-        child_shape_pcd_n: 200
+        parent_shape_pcd_n: 512
+        child_shape_pcd_n: 512
         aug:
-            rot_aug: 'yaw_rot'
+            rot_aug:
 
 optimizer:
     refine_pose:

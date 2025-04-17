@@ -1,12 +1,12 @@
 inherit_from: base.yaml
 experiment:
-    num_train_workers: 12 #12
-    batch_size: 16 #16
-    experiment_name: anyplace_diffusion_molmocrop_multitask
-    run_name: anyplace_diffusion_molmocrop_multitask
+    num_train_workers: 4 #12
+    batch_size: 5 #16
+    experiment_name: anyplace_diffusion_molmocrop_stack_blocks
+    run_name: anyplace_diffusion_molmocrop_stack_blocks
     meshcat_on: False
     resume: False
-    num_iterations: 500000
+    num_iterations: 2000
     train:
         train_coarse_aff: False
         train_refine_pose: True
@@ -17,8 +17,8 @@ experiment:
         out_log_success: True
 
 data:
-    data_root: task_gpp_multitask
-    dataset_path: multitask/task_name_multitask_chunked
+    data_root: task_gpp_stack_blocks
+    dataset_path: stack_blocks/task_name_stack_blocks_chunked
     parent_mesh_dir: 
     child_mesh_dir: 
     load_full_pcd: False
@@ -43,7 +43,7 @@ data:
         parent_shape_pcd_n: 400
         child_shape_pcd_n: 200
         aug:
-            rot_aug: 'yaw_rot'
+            rot_aug:
 
 optimizer:
     refine_pose:

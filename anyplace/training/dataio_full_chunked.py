@@ -302,6 +302,8 @@ class FullRelationPointcloudPolicyDataset(Dataset):
                 dict: model inputs 
                 dict: ground truth 
         """
+        if(index == 31):
+            index = 30
         if index in self.not_success_idx:
             return self.get_item(np.random.randint(len(self.data)))
         

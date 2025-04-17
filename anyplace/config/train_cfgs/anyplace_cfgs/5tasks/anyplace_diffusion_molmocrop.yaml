@@ -1,12 +1,12 @@
 inherit_from: base.yaml
 experiment:
-    num_train_workers: 12 #12
-    batch_size: 16 #16
-    experiment_name: anyplace_diffusion_molmocrop_multitask
-    run_name: anyplace_diffusion_molmocrop_multitask
+    num_train_workers: 4 #12
+    batch_size: 10 #16
+    experiment_name: anyplace_diffusion_molmocrop_5tasks
+    run_name: anyplace_diffusion_molmocrop_5tasks
     meshcat_on: False
     resume: False
-    num_iterations: 500000
+    num_iterations: 10000
     train:
         train_coarse_aff: False
         train_refine_pose: True
@@ -17,16 +17,16 @@ experiment:
         out_log_success: True
 
 data:
-    data_root: task_gpp_multitask
-    dataset_path: multitask/task_name_multitask_chunked
+    data_root: task_gpp_5tasks
+    dataset_path: 5tasks/task_name_5tasks_chunked
     parent_mesh_dir: 
     child_mesh_dir: 
     load_full_pcd: False
     parent_crop: False
     gpp_crop: True
     shape_pcd_n: 2048
-    parent_shape_pcd_n: 400
-    child_shape_pcd_n: 200
+    parent_shape_pcd_n: 512
+    child_shape_pcd_n: 512
     pose_perturb:
         use_small_rot_scale: False
         use_small_trans_scale: False
@@ -40,10 +40,10 @@ data:
         vary_crop_size_diffusion: False
         interp_diffusion_traj: true
         precise_diff_prob: true
-        parent_shape_pcd_n: 400
-        child_shape_pcd_n: 200
+        parent_shape_pcd_n: 512
+        child_shape_pcd_n: 512
         aug:
-            rot_aug: 'yaw_rot'
+            rot_aug: 
 
 optimizer:
     refine_pose:
